@@ -17,4 +17,6 @@ dependencyResolutionManagement {
 rootProject.name = "swiss_tournament_calculator"
 include(":app")
 include(":engine")
-
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.9.0"
+}

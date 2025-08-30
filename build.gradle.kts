@@ -7,7 +7,7 @@ plugins {
     kotlin("kapt") version "1.9.24" apply false
 }
 
-tasks.register("clean", Delete::class) {
-    delete(rootProject.buildDir)
+tasks.register<Delete>("clean") {
+    // Use the Provider API instead of deprecated buildDir getter
+    delete(layout.buildDirectory)
 }
-

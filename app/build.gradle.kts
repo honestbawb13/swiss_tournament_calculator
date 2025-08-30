@@ -59,6 +59,9 @@ dependencies {
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
 
+    // Material Components (resolves Material3 theme attrs)
+    implementation("com.google.android.material:material:1.12.0")
+
     // Room
     implementation("androidx.room:room-ktx:2.6.1")
     implementation("androidx.room:room-runtime:2.6.1")
