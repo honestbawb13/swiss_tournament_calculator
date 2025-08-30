@@ -58,38 +58,38 @@
 36            </intent-filter>
 37        </activity>
 38        <activity
-38-->[androidx.compose.ui:ui-tooling-android:1.6.8] C:\Users\dsnow\.gradle\caches\8.10\transforms\b695394ee1209f945b27d818a08191cd\transformed\ui-tooling-release\AndroidManifest.xml:23:9-25:39
+38-->[androidx.compose.ui:ui-tooling-android:1.6.8] C:\Users\dsnow\.gradle\caches\8.10\transforms\e80dcffcebc962b783a89b3a73ffac02\transformed\jetified-ui-tooling-release\AndroidManifest.xml:23:9-25:39
 39            android:name="androidx.compose.ui.tooling.PreviewActivity"
-39-->[androidx.compose.ui:ui-tooling-android:1.6.8] C:\Users\dsnow\.gradle\caches\8.10\transforms\b695394ee1209f945b27d818a08191cd\transformed\ui-tooling-release\AndroidManifest.xml:24:13-71
+39-->[androidx.compose.ui:ui-tooling-android:1.6.8] C:\Users\dsnow\.gradle\caches\8.10\transforms\e80dcffcebc962b783a89b3a73ffac02\transformed\jetified-ui-tooling-release\AndroidManifest.xml:24:13-71
 40            android:exported="true" />
-40-->[androidx.compose.ui:ui-tooling-android:1.6.8] C:\Users\dsnow\.gradle\caches\8.10\transforms\b695394ee1209f945b27d818a08191cd\transformed\ui-tooling-release\AndroidManifest.xml:25:13-36
+40-->[androidx.compose.ui:ui-tooling-android:1.6.8] C:\Users\dsnow\.gradle\caches\8.10\transforms\e80dcffcebc962b783a89b3a73ffac02\transformed\jetified-ui-tooling-release\AndroidManifest.xml:25:13-36
 41
 42        <provider
-42-->[androidx.emoji2:emoji2:1.3.0] C:\Users\dsnow\.gradle\caches\8.10\transforms\c900d3122883727cd7abaac1e0450b99\transformed\emoji2-1.3.0\AndroidManifest.xml:24:9-32:20
+42-->[androidx.emoji2:emoji2:1.3.0] C:\Users\dsnow\.gradle\caches\8.10\transforms\76ad22756416418d164102eebfd8c371\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:24:9-32:20
 43            android:name="androidx.startup.InitializationProvider"
-43-->[androidx.emoji2:emoji2:1.3.0] C:\Users\dsnow\.gradle\caches\8.10\transforms\c900d3122883727cd7abaac1e0450b99\transformed\emoji2-1.3.0\AndroidManifest.xml:25:13-67
+43-->[androidx.emoji2:emoji2:1.3.0] C:\Users\dsnow\.gradle\caches\8.10\transforms\76ad22756416418d164102eebfd8c371\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:25:13-67
 44            android:authorities="com.example.swiss.androidx-startup"
-44-->[androidx.emoji2:emoji2:1.3.0] C:\Users\dsnow\.gradle\caches\8.10\transforms\c900d3122883727cd7abaac1e0450b99\transformed\emoji2-1.3.0\AndroidManifest.xml:26:13-68
+44-->[androidx.emoji2:emoji2:1.3.0] C:\Users\dsnow\.gradle\caches\8.10\transforms\76ad22756416418d164102eebfd8c371\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:26:13-68
 45            android:exported="false" >
-45-->[androidx.emoji2:emoji2:1.3.0] C:\Users\dsnow\.gradle\caches\8.10\transforms\c900d3122883727cd7abaac1e0450b99\transformed\emoji2-1.3.0\AndroidManifest.xml:27:13-37
+45-->[androidx.emoji2:emoji2:1.3.0] C:\Users\dsnow\.gradle\caches\8.10\transforms\76ad22756416418d164102eebfd8c371\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:27:13-37
 46            <meta-data
-46-->[androidx.emoji2:emoji2:1.3.0] C:\Users\dsnow\.gradle\caches\8.10\transforms\c900d3122883727cd7abaac1e0450b99\transformed\emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
+46-->[androidx.emoji2:emoji2:1.3.0] C:\Users\dsnow\.gradle\caches\8.10\transforms\76ad22756416418d164102eebfd8c371\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
 47                android:name="androidx.emoji2.text.EmojiCompatInitializer"
-47-->[androidx.emoji2:emoji2:1.3.0] C:\Users\dsnow\.gradle\caches\8.10\transforms\c900d3122883727cd7abaac1e0450b99\transformed\emoji2-1.3.0\AndroidManifest.xml:30:17-75
+47-->[androidx.emoji2:emoji2:1.3.0] C:\Users\dsnow\.gradle\caches\8.10\transforms\76ad22756416418d164102eebfd8c371\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:30:17-75
 48                android:value="androidx.startup" />
-48-->[androidx.emoji2:emoji2:1.3.0] C:\Users\dsnow\.gradle\caches\8.10\transforms\c900d3122883727cd7abaac1e0450b99\transformed\emoji2-1.3.0\AndroidManifest.xml:31:17-49
+48-->[androidx.emoji2:emoji2:1.3.0] C:\Users\dsnow\.gradle\caches\8.10\transforms\76ad22756416418d164102eebfd8c371\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:31:17-49
 49            <meta-data
-49-->[androidx.lifecycle:lifecycle-process:2.8.4] C:\Users\dsnow\.gradle\caches\8.10\transforms\ab4255ebccc2090262de5e9ec112f75a\transformed\lifecycle-process-2.8.4\AndroidManifest.xml:29:13-31:52
+49-->[androidx.lifecycle:lifecycle-process:2.8.4] C:\Users\dsnow\.gradle\caches\8.10\transforms\1e3f40c6e26947dc6944340a53c90ad2\transformed\jetified-lifecycle-process-2.8.4\AndroidManifest.xml:29:13-31:52
 50                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
-50-->[androidx.lifecycle:lifecycle-process:2.8.4] C:\Users\dsnow\.gradle\caches\8.10\transforms\ab4255ebccc2090262de5e9ec112f75a\transformed\lifecycle-process-2.8.4\AndroidManifest.xml:30:17-78
+50-->[androidx.lifecycle:lifecycle-process:2.8.4] C:\Users\dsnow\.gradle\caches\8.10\transforms\1e3f40c6e26947dc6944340a53c90ad2\transformed\jetified-lifecycle-process-2.8.4\AndroidManifest.xml:30:17-78
 51                android:value="androidx.startup" />
-51-->[androidx.lifecycle:lifecycle-process:2.8.4] C:\Users\dsnow\.gradle\caches\8.10\transforms\ab4255ebccc2090262de5e9ec112f75a\transformed\lifecycle-process-2.8.4\AndroidManifest.xml:31:17-49
+51-->[androidx.lifecycle:lifecycle-process:2.8.4] C:\Users\dsnow\.gradle\caches\8.10\transforms\1e3f40c6e26947dc6944340a53c90ad2\transformed\jetified-lifecycle-process-2.8.4\AndroidManifest.xml:31:17-49
 52            <meta-data
-52-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\09dc29d088dda7f34930b1335be6d9a5\transformed\profileinstaller-1.3.1\AndroidManifest.xml:29:13-31:52
+52-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\05fbf58e617688dccd1c051c6d58448f\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:29:13-31:52
 53                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
-53-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\09dc29d088dda7f34930b1335be6d9a5\transformed\profileinstaller-1.3.1\AndroidManifest.xml:30:17-85
+53-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\05fbf58e617688dccd1c051c6d58448f\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:30:17-85
 54                android:value="androidx.startup" />
-54-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\09dc29d088dda7f34930b1335be6d9a5\transformed\profileinstaller-1.3.1\AndroidManifest.xml:31:17-49
+54-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\05fbf58e617688dccd1c051c6d58448f\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:31:17-49
 55        </provider>
 56
 57        <service
@@ -102,40 +102,40 @@
 60-->[androidx.room:room-runtime:2.6.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\755e388aff7946f6477e5d0e7f02eb4f\transformed\room-runtime-2.6.1\AndroidManifest.xml:27:13-37
 61
 62        <receiver
-62-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\09dc29d088dda7f34930b1335be6d9a5\transformed\profileinstaller-1.3.1\AndroidManifest.xml:34:9-52:20
+62-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\05fbf58e617688dccd1c051c6d58448f\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:34:9-52:20
 63            android:name="androidx.profileinstaller.ProfileInstallReceiver"
-63-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\09dc29d088dda7f34930b1335be6d9a5\transformed\profileinstaller-1.3.1\AndroidManifest.xml:35:13-76
+63-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\05fbf58e617688dccd1c051c6d58448f\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:35:13-76
 64            android:directBootAware="false"
-64-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\09dc29d088dda7f34930b1335be6d9a5\transformed\profileinstaller-1.3.1\AndroidManifest.xml:36:13-44
+64-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\05fbf58e617688dccd1c051c6d58448f\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:36:13-44
 65            android:enabled="true"
-65-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\09dc29d088dda7f34930b1335be6d9a5\transformed\profileinstaller-1.3.1\AndroidManifest.xml:37:13-35
+65-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\05fbf58e617688dccd1c051c6d58448f\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:37:13-35
 66            android:exported="true"
-66-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\09dc29d088dda7f34930b1335be6d9a5\transformed\profileinstaller-1.3.1\AndroidManifest.xml:38:13-36
+66-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\05fbf58e617688dccd1c051c6d58448f\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:38:13-36
 67            android:permission="android.permission.DUMP" >
-67-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\09dc29d088dda7f34930b1335be6d9a5\transformed\profileinstaller-1.3.1\AndroidManifest.xml:39:13-57
+67-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\05fbf58e617688dccd1c051c6d58448f\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:39:13-57
 68            <intent-filter>
-68-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\09dc29d088dda7f34930b1335be6d9a5\transformed\profileinstaller-1.3.1\AndroidManifest.xml:40:13-42:29
+68-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\05fbf58e617688dccd1c051c6d58448f\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:40:13-42:29
 69                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
-69-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\09dc29d088dda7f34930b1335be6d9a5\transformed\profileinstaller-1.3.1\AndroidManifest.xml:41:17-91
-69-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\09dc29d088dda7f34930b1335be6d9a5\transformed\profileinstaller-1.3.1\AndroidManifest.xml:41:25-88
+69-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\05fbf58e617688dccd1c051c6d58448f\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:41:17-91
+69-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\05fbf58e617688dccd1c051c6d58448f\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:41:25-88
 70            </intent-filter>
 71            <intent-filter>
-71-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\09dc29d088dda7f34930b1335be6d9a5\transformed\profileinstaller-1.3.1\AndroidManifest.xml:43:13-45:29
+71-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\05fbf58e617688dccd1c051c6d58448f\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:43:13-45:29
 72                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
-72-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\09dc29d088dda7f34930b1335be6d9a5\transformed\profileinstaller-1.3.1\AndroidManifest.xml:44:17-85
-72-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\09dc29d088dda7f34930b1335be6d9a5\transformed\profileinstaller-1.3.1\AndroidManifest.xml:44:25-82
+72-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\05fbf58e617688dccd1c051c6d58448f\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:44:17-85
+72-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\05fbf58e617688dccd1c051c6d58448f\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:44:25-82
 73            </intent-filter>
 74            <intent-filter>
-74-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\09dc29d088dda7f34930b1335be6d9a5\transformed\profileinstaller-1.3.1\AndroidManifest.xml:46:13-48:29
+74-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\05fbf58e617688dccd1c051c6d58448f\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:46:13-48:29
 75                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
-75-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\09dc29d088dda7f34930b1335be6d9a5\transformed\profileinstaller-1.3.1\AndroidManifest.xml:47:17-88
-75-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\09dc29d088dda7f34930b1335be6d9a5\transformed\profileinstaller-1.3.1\AndroidManifest.xml:47:25-85
+75-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\05fbf58e617688dccd1c051c6d58448f\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:47:17-88
+75-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\05fbf58e617688dccd1c051c6d58448f\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:47:25-85
 76            </intent-filter>
 77            <intent-filter>
-77-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\09dc29d088dda7f34930b1335be6d9a5\transformed\profileinstaller-1.3.1\AndroidManifest.xml:49:13-51:29
+77-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\05fbf58e617688dccd1c051c6d58448f\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:49:13-51:29
 78                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
-78-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\09dc29d088dda7f34930b1335be6d9a5\transformed\profileinstaller-1.3.1\AndroidManifest.xml:50:17-95
-78-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\09dc29d088dda7f34930b1335be6d9a5\transformed\profileinstaller-1.3.1\AndroidManifest.xml:50:25-92
+78-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\05fbf58e617688dccd1c051c6d58448f\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:50:17-95
+78-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\dsnow\.gradle\caches\8.10\transforms\05fbf58e617688dccd1c051c6d58448f\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:50:25-92
 79            </intent-filter>
 80        </receiver>
 81    </application>

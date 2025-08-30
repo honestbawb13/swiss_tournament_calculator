@@ -23,10 +23,11 @@ fun ManualPairingScreen(onDone: () -> Unit, vm: ManualPairingViewModel = hiltVie
             Button(onClick = { vm.save(onDone) }, enabled = vm.canSave()) { Text("Save Round") }
         }
         Spacer(Modifier.height(8.dp))
-        if (ui.state?.players?.size?.rem(2) == 1 && ui.bye == null) {
+        val bye = ui.bye
+        if (ui.state?.players?.size?.rem(2) == 1 && bye == null) {
             Text("Choose a bye: tap a player below")
-        } else if (ui.bye != null) {
-            AssistChip(onClick = {}, label = { Text("Bye: ${ui.bye.name}") })
+        } else if (bye != null) {
+            AssistChip(onClick = {}, label = { Text("Bye: ${bye.name}") })
         }
         Divider(Modifier.padding(vertical = 8.dp))
         Text("Unpaired Players")
@@ -52,4 +53,3 @@ fun ManualPairingScreen(onDone: () -> Unit, vm: ManualPairingViewModel = hiltVie
         ui.pairs.forEach { (a, b) -> Text("- ${a.name} vs ${b.name}") }
     }
 }
-

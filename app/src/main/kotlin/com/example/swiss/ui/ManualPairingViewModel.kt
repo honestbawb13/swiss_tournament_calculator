@@ -89,7 +89,7 @@ class ManualPairingViewModel @Inject constructor(
         val matches = mutableListOf<Match>()
         _ui.value.pairs.forEachIndexed { i, (a, b) ->
             matches += Match(
-                id = MatchId("r${nextIndex + 1}_m$i_${UUID.randomUUID().toString().take(8)}"),
+                id = MatchId("r${nextIndex + 1}_m${i}_${UUID.randomUUID().toString().take(8)}"),
                 roundIndex = nextIndex,
                 home = a.id,
                 away = b.id,
@@ -111,4 +111,3 @@ class ManualPairingViewModel @Inject constructor(
         }
     }
 }
-
