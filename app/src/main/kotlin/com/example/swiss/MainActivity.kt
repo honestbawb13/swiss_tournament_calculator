@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.swiss.ui.AppNavHost
+import com.example.swiss.ui.theme.SwissTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -16,10 +17,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MaterialTheme {
-                Surface(color = MaterialTheme.colorScheme.background) {
-                    AppNavHost()
-                }
+            SwissTheme {
+                Surface(color = MaterialTheme.colorScheme.background) { AppNavHost() }
             }
         }
     }
@@ -28,6 +27,5 @@ class MainActivity : ComponentActivity() {
 @Preview
 @Composable
 fun PreviewApp() {
-    MaterialTheme { Text("Swiss App") }
+    SwissTheme { Text("Swiss App") }
 }
-

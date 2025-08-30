@@ -83,8 +83,7 @@ public final class TournamentDao_Impl implements TournamentDao {
   }
 
   @Override
-  public Object upsert(final TournamentEntity entity,
-      final Continuation<? super Unit> $completion) {
+  public Object upsert(final TournamentEntity entity, final Continuation<? super Unit> arg1) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -98,11 +97,11 @@ public final class TournamentDao_Impl implements TournamentDao {
           __db.endTransaction();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
-  public Object delete(final String id, final Continuation<? super Unit> $completion) {
+  public Object delete(final String id, final Continuation<? super Unit> arg1) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -127,11 +126,11 @@ public final class TournamentDao_Impl implements TournamentDao {
           __preparedStmtOfDelete.release(_stmt);
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
-  public Object list(final Continuation<? super List<TournamentEntity>> $completion) {
+  public Object list(final Continuation<? super List<TournamentEntity>> arg0) {
     final String _sql = "SELECT * FROM tournaments ORDER BY createdAt DESC";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
     final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
@@ -195,11 +194,11 @@ public final class TournamentDao_Impl implements TournamentDao {
           _statement.release();
         }
       }
-    }, $completion);
+    }, arg0);
   }
 
   @Override
-  public Object get(final String id, final Continuation<? super TournamentEntity> $completion) {
+  public Object get(final String id, final Continuation<? super TournamentEntity> arg1) {
     final String _sql = "SELECT * FROM tournaments WHERE id = ? LIMIT 1";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
@@ -269,7 +268,7 @@ public final class TournamentDao_Impl implements TournamentDao {
           _statement.release();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @NonNull

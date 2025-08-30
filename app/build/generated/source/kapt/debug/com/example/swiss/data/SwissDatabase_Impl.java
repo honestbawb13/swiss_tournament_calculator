@@ -33,10 +33,12 @@ public final class SwissDatabase_Impl extends SwissDatabase {
 
   private volatile MatchDao _matchDao;
 
+  private volatile UnlockDao _unlockDao;
+
   @Override
   @NonNull
   protected SupportSQLiteOpenHelper createOpenHelper(@NonNull final DatabaseConfiguration config) {
-    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(1) {
+    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(2) {
       @Override
       public void createAllTables(@NonNull final SupportSQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS `tournaments` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `bestOf` TEXT NOT NULL, `allowDraws` INTEGER NOT NULL, `roundsPlanned` INTEGER NOT NULL, `randomFirstRound` INTEGER NOT NULL, `locked` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, PRIMARY KEY(`id`))");
@@ -44,8 +46,10 @@ public final class SwissDatabase_Impl extends SwissDatabase {
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_players_tournamentId` ON `players` (`tournamentId`)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `matches` (`id` TEXT NOT NULL, `tournamentId` TEXT NOT NULL, `roundIndex` INTEGER NOT NULL, `homePlayerId` TEXT, `awayPlayerId` TEXT, `homeGamesWon` INTEGER, `awayGamesWon` INTEGER, `draws` INTEGER, PRIMARY KEY(`id`))");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_matches_tournamentId_roundIndex` ON `matches` (`tournamentId`, `roundIndex`)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS `unlock_events` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `tournamentId` TEXT NOT NULL, `roundIndex` INTEGER NOT NULL, `timestamp` INTEGER NOT NULL)");
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_unlock_events_tournamentId` ON `unlock_events` (`tournamentId`)");
         db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9010a18b98a87bcea6e0253b3dd3795d')");
+        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9b732dc593d7349b1cfd6a65e064cc19')");
       }
 
       @Override
@@ -53,6 +57,7 @@ public final class SwissDatabase_Impl extends SwissDatabase {
         db.execSQL("DROP TABLE IF EXISTS `tournaments`");
         db.execSQL("DROP TABLE IF EXISTS `players`");
         db.execSQL("DROP TABLE IF EXISTS `matches`");
+        db.execSQL("DROP TABLE IF EXISTS `unlock_events`");
         final List<? extends RoomDatabase.Callback> _callbacks = mCallbacks;
         if (_callbacks != null) {
           for (RoomDatabase.Callback _callback : _callbacks) {
@@ -148,9 +153,24 @@ public final class SwissDatabase_Impl extends SwissDatabase {
                   + " Expected:\n" + _infoMatches + "\n"
                   + " Found:\n" + _existingMatches);
         }
+        final HashMap<String, TableInfo.Column> _columnsUnlockEvents = new HashMap<String, TableInfo.Column>(4);
+        _columnsUnlockEvents.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsUnlockEvents.put("tournamentId", new TableInfo.Column("tournamentId", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsUnlockEvents.put("roundIndex", new TableInfo.Column("roundIndex", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsUnlockEvents.put("timestamp", new TableInfo.Column("timestamp", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        final HashSet<TableInfo.ForeignKey> _foreignKeysUnlockEvents = new HashSet<TableInfo.ForeignKey>(0);
+        final HashSet<TableInfo.Index> _indicesUnlockEvents = new HashSet<TableInfo.Index>(1);
+        _indicesUnlockEvents.add(new TableInfo.Index("index_unlock_events_tournamentId", false, Arrays.asList("tournamentId"), Arrays.asList("ASC")));
+        final TableInfo _infoUnlockEvents = new TableInfo("unlock_events", _columnsUnlockEvents, _foreignKeysUnlockEvents, _indicesUnlockEvents);
+        final TableInfo _existingUnlockEvents = TableInfo.read(db, "unlock_events");
+        if (!_infoUnlockEvents.equals(_existingUnlockEvents)) {
+          return new RoomOpenHelper.ValidationResult(false, "unlock_events(com.example.swiss.data.UnlockEventEntity).\n"
+                  + " Expected:\n" + _infoUnlockEvents + "\n"
+                  + " Found:\n" + _existingUnlockEvents);
+        }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "9010a18b98a87bcea6e0253b3dd3795d", "18012f855239d32ca19a79de1c93c196");
+    }, "9b732dc593d7349b1cfd6a65e064cc19", "4f897dc0009c372a6263596f159aefed");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(config.context).name(config.name).callback(_openCallback).build();
     final SupportSQLiteOpenHelper _helper = config.sqliteOpenHelperFactory.create(_sqliteConfig);
     return _helper;
@@ -161,7 +181,7 @@ public final class SwissDatabase_Impl extends SwissDatabase {
   protected InvalidationTracker createInvalidationTracker() {
     final HashMap<String, String> _shadowTablesMap = new HashMap<String, String>(0);
     final HashMap<String, Set<String>> _viewTables = new HashMap<String, Set<String>>(0);
-    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "tournaments","players","matches");
+    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "tournaments","players","matches","unlock_events");
   }
 
   @Override
@@ -173,6 +193,7 @@ public final class SwissDatabase_Impl extends SwissDatabase {
       _db.execSQL("DELETE FROM `tournaments`");
       _db.execSQL("DELETE FROM `players`");
       _db.execSQL("DELETE FROM `matches`");
+      _db.execSQL("DELETE FROM `unlock_events`");
       super.setTransactionSuccessful();
     } finally {
       super.endTransaction();
@@ -190,6 +211,7 @@ public final class SwissDatabase_Impl extends SwissDatabase {
     _typeConvertersMap.put(TournamentDao.class, TournamentDao_Impl.getRequiredConverters());
     _typeConvertersMap.put(PlayerDao.class, PlayerDao_Impl.getRequiredConverters());
     _typeConvertersMap.put(MatchDao.class, MatchDao_Impl.getRequiredConverters());
+    _typeConvertersMap.put(UnlockDao.class, UnlockDao_Impl.getRequiredConverters());
     return _typeConvertersMap;
   }
 
@@ -246,6 +268,20 @@ public final class SwissDatabase_Impl extends SwissDatabase {
           _matchDao = new MatchDao_Impl(this);
         }
         return _matchDao;
+      }
+    }
+  }
+
+  @Override
+  public UnlockDao unlocks() {
+    if (_unlockDao != null) {
+      return _unlockDao;
+    } else {
+      synchronized(this) {
+        if(_unlockDao == null) {
+          _unlockDao = new UnlockDao_Impl(this);
+        }
+        return _unlockDao;
       }
     }
   }

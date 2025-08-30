@@ -96,8 +96,7 @@ public final class MatchDao_Impl implements MatchDao {
   }
 
   @Override
-  public Object upsertAll(final List<MatchEntity> matches,
-      final Continuation<? super Unit> $completion) {
+  public Object upsertAll(final List<MatchEntity> matches, final Continuation<? super Unit> arg1) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -111,11 +110,11 @@ public final class MatchDao_Impl implements MatchDao {
           __db.endTransaction();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
-  public Object deleteByTournament(final String tid, final Continuation<? super Unit> $completion) {
+  public Object deleteByTournament(final String tid, final Continuation<? super Unit> arg1) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -140,12 +139,12 @@ public final class MatchDao_Impl implements MatchDao {
           __preparedStmtOfDeleteByTournament.release(_stmt);
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
   public Object listByTournament(final String tid,
-      final Continuation<? super List<MatchEntity>> $completion) {
+      final Continuation<? super List<MatchEntity>> arg1) {
     final String _sql = "SELECT * FROM matches WHERE tournamentId = ? ORDER BY roundIndex ASC";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
@@ -225,7 +224,7 @@ public final class MatchDao_Impl implements MatchDao {
           _statement.release();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @NonNull

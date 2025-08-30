@@ -1,8 +1,10 @@
 package com.example.swiss.ui
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -22,23 +24,56 @@ import androidx.compose.material.icons.filled.LockOpen
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.SportsEsports
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.with
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TournamentScreen(id: String, onManualPair: () -> Unit, vm: TournamentViewModel = hiltViewModel()) {
     val ui by vm.ui.collectAsState()
 
-    Column(modifier = Modifier.padding(16.dp)) {
-        Text("Tournament: ${ui.name}", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold)
+    Scaffold(
+        topBar = {
+            TopAppBar(title = { Text(ui.name) }, actions = {
+                ExportMenuButton(ui)
+            })
+        }
+    ) { padding ->
+    Column(modifier = Modifier.padding(padding).padding(16.dp)) {
+        // Summary chips
+        val st = ui.state
+        if (st != null) {
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                AssistChip(onClick = {}, enabled = false, label = { Text("Players: ${st.players.size}") }, leadingIcon = { Icon(Icons.Filled.SportsEsports, contentDescription = null) })
+                AssistChip(onClick = {}, enabled = false, label = { Text("Best: ${st.config.bestOf.name}") })
+                AssistChip(onClick = {}, enabled = false, label = { Text("Planned: ${st.config.roundsPlanned}") })
+            }
+        }
         Spacer(Modifier.height(8.dp))
+        // Top actions
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
             Button(onClick = vm::generateNextRound, enabled = ui.state != null && ui.canGenerateNextRound) { Text("Next Round") }
-            ExportButtons(ui)
-            OutlinedButton(onClick = onManualPair, enabled = ui.state != null && ui.canGenerateNextRound) { Text("Manual Pairing") }
+            // Manual pairing only at start of latest round (no saved matches yet)
+            val latestIdx = ui.rounds.maxByOrNull { it.round.index }?.round?.index
+            val latest = ui.rounds.firstOrNull { it.round.index == latestIdx }
+            val latestSaved = latest?.round?.matches?.count { it.result != null && it.home != null && it.away != null } ?: 0
+            val latestTotal = latest?.round?.matches?.count { it.home != null && it.away != null } ?: 0
+            val canManualPair = latestIdx != null && latestSaved == 0 && latestTotal > 0
+            OutlinedButton(onClick = onManualPair, enabled = canManualPair) { Text("Manual Pairing") }
         }
         Divider(Modifier.padding(vertical = 8.dp))
 
@@ -67,22 +102,27 @@ fun TournamentScreen(id: String, onManualPair: () -> Unit, vm: TournamentViewMod
                     val isLatest = ridx == latestIndex
                     val complete = remember(rUi.round, ui.state!!.config) { roundCompleteUi(rUi.round, ui.state!!) }
 
-                    // Progress graphic
+                    // Progress graphic (top)
                     val totalMatches = rUi.round.matches.count { it.away != null && it.home != null } // ignore bye for progress
                     val completedMatches = rUi.round.matches.count { it.result != null && it.away != null && it.home != null }
-                    val progress = if (totalMatches == 0) 0f else completedMatches.toFloat() / totalMatches.toFloat()
-                    Column {
-                        LinearProgressIndicator(progress = progress, modifier = Modifier.fillMaxWidth())
+                    val progressTarget = if (totalMatches == 0) 0f else completedMatches.toFloat() / totalMatches.toFloat()
+                    val progress by androidx.compose.animation.core.animateFloatAsState(
+                        targetValue = progressTarget,
+                        animationSpec = tween(durationMillis = 600, easing = LinearOutSlowInEasing),
+                        label = "roundProgress"
+                    )
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                        CircularProgressIndicator(progress = progress, strokeWidth = 6.dp)
                         Text("Round ${ridx + 1}: $completedMatches/$totalMatches matches saved")
-                    }
-
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                        AssistChip(onClick = {}, enabled = false, label = { Text(if (complete) "Completed" else "Incomplete") })
+                        Spacer(Modifier.weight(1f))
+                        AnimatedContent(targetState = complete, transitionSpec = { fadeIn() with fadeOut() }, label = "completeChip") { isComplete ->
+                            AssistChip(onClick = {}, enabled = false, label = { Text(if (isComplete) "Completed" else "Incomplete") })
+                        }
                         if (!isLatest) {
                             val unlocked = ui.unlockedRounds.contains(ridx)
                             var showConfirm by remember { mutableStateOf(false) }
                             if (!unlocked) {
-                                OutlinedButton(onClick = { showConfirm = true }) { Text("Unlock Round") }
+                                OutlinedButton(onClick = { showConfirm = true }) { Text("Unlock") }
                             } else {
                                 AssistChip(onClick = {}, enabled = false, label = { Text("Unlocked") })
                             }
@@ -98,29 +138,35 @@ fun TournamentScreen(id: String, onManualPair: () -> Unit, vm: TournamentViewMod
                         }
                     }
 
-                    // Matches list
+                    // Scrollable matches list with spacing
                     val idToName = ui.state!!.players.associate { it.id.value to it.name }
-                    rUi.round.matches.forEach { m ->
-                        val editable = isLatest || ui.unlockedRounds.contains(ridx)
-                        MatchEditor(
-                            isLocked = !editable,
-                            matchId = m.id.value,
-                            roundIndex = rUi.round.index,
-                            home = m.home?.value?.let { idToName[it] } ?: "BYE",
-                            away = m.away?.value?.let { idToName[it] } ?: "BYE",
-                            initHome = m.result?.homeGamesWon ?: 0,
-                            initAway = m.result?.awayGamesWon ?: 0,
-                            initDraws = m.result?.draws ?: 0,
-                            bestOf = ui.state!!.config.bestOf,
-                            allowDraws = ui.state!!.config.allowDraws,
-                            onChange = { h, a, d -> vm.updateMatchResult(rUi.round.index, m.id.value, h, a, d) }
-                        )
+                    LazyColumn(modifier = Modifier.fillMaxWidth().weight(1f, fill = true), verticalArrangement = Arrangement.spacedBy(12.dp), contentPadding = PaddingValues(vertical = 8.dp)) {
+                        items(rUi.round.matches.size) { mi ->
+                            val m = rUi.round.matches[mi]
+                            val editable = isLatest || ui.unlockedRounds.contains(ridx)
+                            MatchEditor(
+                                isLocked = !editable,
+                                matchId = m.id.value,
+                                roundIndex = rUi.round.index,
+                                home = m.home?.value?.let { idToName[it] } ?: "BYE",
+                                away = m.away?.value?.let { idToName[it] } ?: "BYE",
+                                initHome = m.result?.homeGamesWon ?: 0,
+                                initAway = m.result?.awayGamesWon ?: 0,
+                                initDraws = m.result?.draws ?: 0,
+                                bestOf = ui.state!!.config.bestOf,
+                                allowDraws = ui.state!!.config.allowDraws,
+                                onChange = { h, a, d -> vm.updateMatchResult(rUi.round.index, m.id.value, h, a, d) }
+                            )
+                        }
+                    }
+                    if (completedMatches == 0) {
+                        PlaceholderGraphic()
                     }
                 }
             }
         }
     }
-}
+    }
 
 @Composable
 private fun MatchEditor(
@@ -181,9 +227,9 @@ private fun Stepper(label: String, value: Int, enabled: Boolean, onDelta: (Int) 
     Column {
         Text(label)
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            IconButton(onClick = { onDelta(-1) }, enabled = enabled) { Icon(Icons.Filled.Remove, contentDescription = "Decrement") }
+            IconButton(onClick = { onDelta(-1) }, enabled = enabled) { Icon(Icons.Filled.Remove, contentDescription = "Decrement $label") }
             Text(value.toString(), textAlign = TextAlign.Center, modifier = Modifier.width(24.dp))
-            IconButton(onClick = { onDelta(1) }, enabled = enabled) { Icon(Icons.Filled.Add, contentDescription = "Increment") }
+            IconButton(onClick = { onDelta(1) }, enabled = enabled) { Icon(Icons.Filled.Add, contentDescription = "Increment $label") }
         }
     }
 }
@@ -207,8 +253,8 @@ private fun ExportButtons(ui: TournamentUiState) {
     }
 
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        OutlinedButton(onClick = { standingsLauncher.launch("standings_${ui.name}.csv") }, enabled = ui.state != null) { Text("Standings CSV") }
-        OutlinedButton(onClick = { matchesLauncher.launch("matches_${ui.name}.csv") }, enabled = ui.state != null) { Text("Matches CSV") }
+        OutlinedButton(onClick = { standingsLauncher.launch("standings_${ui.name}.csv") }, enabled = ui.state != null) { Text("Standings", maxLines = 1) }
+        OutlinedButton(onClick = { matchesLauncher.launch("matches_${ui.name}.csv") }, enabled = ui.state != null) { Text("Matches", maxLines = 1) }
     }
 }
 
@@ -260,6 +306,44 @@ private fun StandingsView(state: com.example.engine.model.TournamentState, unloc
                 Divider()
                 standings.forEach { s -> Text("${s.sonnebornBerger}") }
             }
+        }
+    }
+}
+
+@Composable
+private fun ExportMenuButton(ui: TournamentUiState) {
+    val context = LocalContext.current
+    val exporter = remember { CsvExporter() }
+    var expanded by remember { mutableStateOf(false) }
+    val standingsLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/csv")) { uri ->
+        expanded = false
+        if (uri != null && ui.state != null) {
+            val csv = exporter.standingsCsv(ui.state, ui.name, ui.unlockedRounds)
+            writeTextToUri(context, uri, csv)
+        }
+    }
+    val matchesLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/csv")) { uri ->
+        expanded = false
+        if (uri != null && ui.state != null) {
+            val csv = exporter.matchesCsv(ui.state, ui.name, ui.unlockedRounds)
+            writeTextToUri(context, uri, csv)
+        }
+    }
+    Box {
+        IconButton(onClick = { expanded = true }) { Icon(Icons.Filled.MoreVert, contentDescription = "More actions") }
+        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+            DropdownMenuItem(text = { Text("Export Standings") }, onClick = { standingsLauncher.launch("standings_${ui.name}.csv") })
+            DropdownMenuItem(text = { Text("Export Matches") }, onClick = { matchesLauncher.launch("matches_${ui.name}.csv") })
+        }
+    }
+}
+
+@Composable
+private fun PlaceholderGraphic() {
+    Surface(tonalElevation = 2.dp, shape = RoundedCornerShape(12.dp), modifier = Modifier.fillMaxWidth()) {
+        Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            Icon(Icons.Filled.SportsEsports, contentDescription = null)
+            Text("No results yet — start saving match results to see progress.")
         }
     }
 }

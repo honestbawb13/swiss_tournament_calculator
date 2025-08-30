@@ -75,8 +75,7 @@ public final class PlayerDao_Impl implements PlayerDao {
   }
 
   @Override
-  public Object upsertAll(final List<PlayerEntity> players,
-      final Continuation<? super Unit> $completion) {
+  public Object upsertAll(final List<PlayerEntity> players, final Continuation<? super Unit> arg1) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -90,11 +89,11 @@ public final class PlayerDao_Impl implements PlayerDao {
           __db.endTransaction();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
-  public Object deleteByTournament(final String tid, final Continuation<? super Unit> $completion) {
+  public Object deleteByTournament(final String tid, final Continuation<? super Unit> arg1) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -119,12 +118,12 @@ public final class PlayerDao_Impl implements PlayerDao {
           __preparedStmtOfDeleteByTournament.release(_stmt);
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
   public Object listByTournament(final String tid,
-      final Continuation<? super List<PlayerEntity>> $completion) {
+      final Continuation<? super List<PlayerEntity>> arg1) {
     final String _sql = "SELECT * FROM players WHERE tournamentId = ? ORDER BY seed ASC";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
     int _argIndex = 1;
@@ -176,7 +175,7 @@ public final class PlayerDao_Impl implements PlayerDao {
           _statement.release();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @NonNull
