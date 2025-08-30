@@ -40,3 +40,10 @@ data class MatchEntity(
     val draws: Int?,
 )
 
+@Entity(tableName = "unlock_events", indices = [Index(value = ["tournamentId"])])
+data class UnlockEventEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val tournamentId: String,
+    val roundIndex: Int,
+    val timestamp: Long,
+)

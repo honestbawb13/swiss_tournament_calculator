@@ -16,7 +16,9 @@ object AppModule {
     @Provides
     @Singleton
     fun provideDb(@ApplicationContext ctx: Context): SwissDatabase =
-        Room.databaseBuilder(ctx, SwissDatabase::class.java, "swiss.db").build()
+        Room.databaseBuilder(ctx, SwissDatabase::class.java, "swiss.db")
+            .fallbackToDestructiveMigration()
+            .build()
 
     @Provides
     @Singleton

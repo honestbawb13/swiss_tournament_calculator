@@ -45,3 +45,11 @@ interface MatchDao {
     suspend fun deleteByTournament(tid: String)
 }
 
+@Dao
+interface UnlockDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(event: UnlockEventEntity)
+
+    @Query("SELECT roundIndex FROM unlock_events WHERE tournamentId = :tid")
+    suspend fun listUnlockedRounds(tid: String): List<Int>
+}

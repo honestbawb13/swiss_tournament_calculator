@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.swiss.app-mergeDebugResources-67:/values-sw/values-sw.xml",
+            "outputFile": "com.example.swiss.app-mergeDebugResources-68:/values-sw/values-sw.xml",
             "map": [
                 {
                     "source": "C:\\Users\\dsnow\\.gradle\\caches\\8.10\\transforms\\493d7f96c51af6d81604496f6427da97\\transformed\\jetified-foundation-release\\res\\values-sw\\values-sw.xml",

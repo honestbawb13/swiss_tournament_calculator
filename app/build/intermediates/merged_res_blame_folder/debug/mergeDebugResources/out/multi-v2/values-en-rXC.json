@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.swiss.app-mergeDebugResources-67:/values-en-rXC/values-en-rXC.xml",
+            "outputFile": "com.example.swiss.app-mergeDebugResources-68:/values-en-rXC/values-en-rXC.xml",
             "map": [
                 {
                     "source": "C:\\Users\\dsnow\\.gradle\\caches\\8.10\\transforms\\47ea4d98655449ba084579571665a36b\\transformed\\jetified-material3-release\\res\\values-en-rXC\\values-en-rXC.xml",

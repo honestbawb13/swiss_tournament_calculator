@@ -35,65 +35,88 @@ fun TournamentScreen(id: String, onManualPair: () -> Unit, vm: TournamentViewMod
     Column(modifier = Modifier.padding(16.dp)) {
         Text("Tournament: ${ui.name}", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold)
         Spacer(Modifier.height(8.dp))
-        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            AssistChip(
-                onClick = vm::toggleLock,
-                label = { Text(if (ui.isLocked) "Unlock to edit" else "Lock") },
-                leadingIcon = {
-                    Icon(if (ui.isLocked) Icons.Default.LockOpen else Icons.Default.Lock, contentDescription = null)
-                }
-            )
-            Button(onClick = vm::generateNextRound, enabled = ui.state != null && ui.canGenerateNextRound) { Text("Generate Next Round") }
+        Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
+            Button(onClick = vm::generateNextRound, enabled = ui.state != null && ui.canGenerateNextRound) { Text("Next Round") }
             ExportButtons(ui)
-            if (!ui.isLocked) {
-                OutlinedButton(onClick = onManualPair, enabled = ui.state != null && ui.canGenerateNextRound) { Text("Manual Pairing") }
-            }
-        }
-        if (ui.isLocked) {
-            AssistChip(onClick = {}, enabled = false, label = { Text("Locked — unlock to edit results") }, leadingIcon = { Icon(Icons.Outlined.Info, contentDescription = null) })
+            OutlinedButton(onClick = onManualPair, enabled = ui.state != null && ui.canGenerateNextRound) { Text("Manual Pairing") }
         }
         Divider(Modifier.padding(vertical = 8.dp))
 
-        val selectedTab = rememberSaveable { mutableStateOf(0) }
-        TabRow(selectedTabIndex = selectedTab.value) {
-            Tab(selected = selectedTab.value == 0, onClick = { selectedTab.value = 0 }, text = { Text("Rounds") })
-            Tab(selected = selectedTab.value == 1, onClick = { selectedTab.value = 1 }, text = { Text("Standings") })
+        val roundCount = ui.rounds.size
+        val selectedTab = rememberSaveable(roundCount) { mutableStateOf(if (roundCount == 0) 0 else roundCount - 1) }
+        ScrollableTabRow(selectedTabIndex = selectedTab.value) {
+            ui.rounds.forEach { rUi ->
+                val idx = rUi.round.index
+                Tab(selected = selectedTab.value == idx, onClick = { selectedTab.value = idx }, text = { Text("R${idx + 1}") })
+            }
+            val standingsIndex = roundCount
+            Tab(selected = selectedTab.value == standingsIndex, onClick = { selectedTab.value = standingsIndex }, text = { Text("Standings") })
         }
         Spacer(Modifier.height(8.dp))
         if (ui.state == null) {
             Text("Loading...")
         } else {
-            if (selectedTab.value == 0) {
-                // Rounds tab
-                LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    items(ui.rounds) { rUi ->
-                        val complete = remember(rUi.round, ui.state!!.config) { roundCompleteUi(rUi.round, ui.state!!) }
-                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                            Text("Round ${rUi.round.index + 1}", style = MaterialTheme.typography.titleMedium)
-                            AssistChip(onClick = {}, enabled = false, label = { Text(if (complete) "Completed" else "Incomplete") })
+            val standingsIndex = ui.rounds.size
+            if (selectedTab.value == standingsIndex) {
+                StandingsView(state = ui.state!!, unlockedRounds = ui.unlockedRounds)
+            } else {
+                val ridx = selectedTab.value
+                val rUi = ui.rounds.firstOrNull { it.round.index == ridx }
+                if (rUi != null) {
+                    val latestIndex = ui.rounds.maxByOrNull { it.round.index }?.round?.index
+                    val isLatest = ridx == latestIndex
+                    val complete = remember(rUi.round, ui.state!!.config) { roundCompleteUi(rUi.round, ui.state!!) }
+
+                    // Progress graphic
+                    val totalMatches = rUi.round.matches.count { it.away != null && it.home != null } // ignore bye for progress
+                    val completedMatches = rUi.round.matches.count { it.result != null && it.away != null && it.home != null }
+                    val progress = if (totalMatches == 0) 0f else completedMatches.toFloat() / totalMatches.toFloat()
+                    Column {
+                        LinearProgressIndicator(progress = progress, modifier = Modifier.fillMaxWidth())
+                        Text("Round ${ridx + 1}: $completedMatches/$totalMatches matches saved")
+                    }
+
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                        AssistChip(onClick = {}, enabled = false, label = { Text(if (complete) "Completed" else "Incomplete") })
+                        if (!isLatest) {
+                            val unlocked = ui.unlockedRounds.contains(ridx)
+                            var showConfirm by remember { mutableStateOf(false) }
+                            if (!unlocked) {
+                                OutlinedButton(onClick = { showConfirm = true }) { Text("Unlock Round") }
+                            } else {
+                                AssistChip(onClick = {}, enabled = false, label = { Text("Unlocked") })
+                            }
+                            if (showConfirm) {
+                                AlertDialog(
+                                    onDismissRequest = { showConfirm = false },
+                                    title = { Text("Unlock Round ${ridx + 1}?") },
+                                    text = { Text("This cannot be undone. Changes will be logged in export and standings.") },
+                                    confirmButton = { TextButton(onClick = { vm.unlockRound(ridx) { showConfirm = false } }) { Text("Confirm") } },
+                                    dismissButton = { TextButton(onClick = { showConfirm = false }) { Text("Cancel") } }
+                                )
+                            }
                         }
-                        rUi.round.matches.forEach { m ->
-                            val idToName = ui.state!!.players.associate { it.id.value to it.name }
-                            MatchEditor(
-                                isLocked = ui.isLocked,
-                                matchId = m.id.value,
-                                roundIndex = rUi.round.index,
-                                home = m.home?.value?.let { idToName[it] } ?: "BYE",
-                                away = m.away?.value?.let { idToName[it] } ?: "BYE",
-                                initHome = m.result?.homeGamesWon ?: 0,
-                                initAway = m.result?.awayGamesWon ?: 0,
-                                initDraws = m.result?.draws ?: 0,
-                                bestOf = ui.state!!.config.bestOf,
-                                allowDraws = ui.state!!.config.allowDraws,
-                                onChange = { h, a, d -> vm.updateMatchResult(rUi.round.index, m.id.value, h, a, d) }
-                            )
-                        }
-                        Divider()
+                    }
+
+                    // Matches list
+                    val idToName = ui.state!!.players.associate { it.id.value to it.name }
+                    rUi.round.matches.forEach { m ->
+                        val editable = isLatest || ui.unlockedRounds.contains(ridx)
+                        MatchEditor(
+                            isLocked = !editable,
+                            matchId = m.id.value,
+                            roundIndex = rUi.round.index,
+                            home = m.home?.value?.let { idToName[it] } ?: "BYE",
+                            away = m.away?.value?.let { idToName[it] } ?: "BYE",
+                            initHome = m.result?.homeGamesWon ?: 0,
+                            initAway = m.result?.awayGamesWon ?: 0,
+                            initDraws = m.result?.draws ?: 0,
+                            bestOf = ui.state!!.config.bestOf,
+                            allowDraws = ui.state!!.config.allowDraws,
+                            onChange = { h, a, d -> vm.updateMatchResult(rUi.round.index, m.id.value, h, a, d) }
+                        )
                     }
                 }
-            } else {
-                // Standings tab
-                StandingsView(state = ui.state!!)
             }
         }
     }
@@ -116,10 +139,15 @@ private fun MatchEditor(
     var h by remember(matchId) { mutableStateOf(initHome) }
     var a by remember(matchId) { mutableStateOf(initAway) }
     var d by remember(matchId) { mutableStateOf(initDraws) }
-    val total = h + a + d
     val valid = when (bestOf) {
-        com.example.engine.model.BestOf.BO1 -> total == 1 && (allowDraws || d == 0)
-        com.example.engine.model.BestOf.BO3 -> total in 2..3 && (allowDraws || d == 0)
+        com.example.engine.model.BestOf.BO1 -> {
+            val total = h + a + d
+            total == 1 && (allowDraws || d == 0)
+        }
+        com.example.engine.model.BestOf.BO3 -> {
+            val total = h + a + d
+            total in 2..3 && (allowDraws || d == 0)
+        }
     }
     ElevatedCard(shape = RoundedCornerShape(12.dp)) {
         Column(modifier = Modifier.padding(12.dp)) {
@@ -167,20 +195,20 @@ private fun ExportButtons(ui: TournamentUiState) {
 
     val standingsLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/csv")) { uri ->
         if (uri != null && ui.state != null) {
-            val csv = exporter.standingsCsv(ui.state, ui.name)
+            val csv = exporter.standingsCsv(ui.state, ui.name, ui.unlockedRounds)
             writeTextToUri(context, uri, csv)
         }
     }
     val matchesLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/csv")) { uri ->
         if (uri != null && ui.state != null) {
-            val csv = exporter.matchesCsv(ui.state, ui.name)
+            val csv = exporter.matchesCsv(ui.state, ui.name, ui.unlockedRounds)
             writeTextToUri(context, uri, csv)
         }
     }
 
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        OutlinedButton(onClick = { standingsLauncher.launch("standings_${ui.name}.csv") }, enabled = ui.state != null) { Text("Export Standings") }
-        OutlinedButton(onClick = { matchesLauncher.launch("matches_${ui.name}.csv") }, enabled = ui.state != null) { Text("Export Matches") }
+        OutlinedButton(onClick = { standingsLauncher.launch("standings_${ui.name}.csv") }, enabled = ui.state != null) { Text("Standings CSV") }
+        OutlinedButton(onClick = { matchesLauncher.launch("matches_${ui.name}.csv") }, enabled = ui.state != null) { Text("Matches CSV") }
     }
 }
 
@@ -191,31 +219,46 @@ private fun writeTextToUri(context: Context, uri: android.net.Uri, text: String)
 }
 
 @Composable
-private fun StandingsView(state: com.example.engine.model.TournamentState) {
+private fun StandingsView(state: com.example.engine.model.TournamentState, unlockedRounds: Set<Int>) {
     val engine = remember { SwissEngine() }
     val standings = remember(state) { engine.standings(state) }
+    val scrollState = rememberScrollState()
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text("Rank", fontWeight = FontWeight.SemiBold)
-            Text("Player", fontWeight = FontWeight.SemiBold)
-            Text("MP", fontWeight = FontWeight.SemiBold)
-            Text("OMW%", fontWeight = FontWeight.SemiBold)
-            Text("GWP%", fontWeight = FontWeight.SemiBold)
-            Text("SB", fontWeight = FontWeight.SemiBold)
+        if (unlockedRounds.isNotEmpty()) {
+            AssistChip(onClick = {}, enabled = false, label = { Text("Unlocked rounds: ${unlockedRounds.sorted().joinToString(", ") { (it + 1).toString() }}") })
         }
-        Divider()
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            items(standings.size) { idx ->
-                val s = standings[idx]
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text("${idx + 1}")
-                    Text(s.player.name)
-                    Text("${s.matchPoints}")
-                    Text(String.format("%.3f", s.opponentsMatchWinPct))
-                    Text(String.format("%.3f", s.gameWinPct))
-                    Text("${s.sonnebornBerger}")
-                }
+        Row(modifier = Modifier
+            .horizontalScroll(scrollState)
+            .fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+            Column(modifier = Modifier.width(56.dp)) {
+                Text("Rank", fontWeight = FontWeight.SemiBold)
                 Divider()
+                standings.forEachIndexed { idx, _ -> Text("${idx + 1}") }
+            }
+            Column(modifier = Modifier.width(160.dp)) {
+                Text("Player", fontWeight = FontWeight.SemiBold)
+                Divider()
+                standings.forEach { s -> Text(s.player.name) }
+            }
+            Column(modifier = Modifier.width(64.dp)) {
+                Text("MP", fontWeight = FontWeight.SemiBold)
+                Divider()
+                standings.forEach { s -> Text("${s.matchPoints}") }
+            }
+            Column(modifier = Modifier.width(80.dp)) {
+                Text("OMW%", fontWeight = FontWeight.SemiBold)
+                Divider()
+                standings.forEach { s -> Text(String.format("%.3f", s.opponentsMatchWinPct)) }
+            }
+            Column(modifier = Modifier.width(80.dp)) {
+                Text("GWP%", fontWeight = FontWeight.SemiBold)
+                Divider()
+                standings.forEach { s -> Text(String.format("%.3f", s.gameWinPct)) }
+            }
+            Column(modifier = Modifier.width(64.dp)) {
+                Text("SB", fontWeight = FontWeight.SemiBold)
+                Divider()
+                standings.forEach { s -> Text("${s.sonnebornBerger}") }
             }
         }
     }

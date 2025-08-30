@@ -27,6 +27,7 @@ data class TournamentUiState(
     val rounds: List<RoundUi> = emptyList(),
     val isLocked: Boolean = true,
     val canGenerateNextRound: Boolean = false,
+    val unlockedRounds: Set<Int> = emptySet(),
     val error: String? = null,
 )
 
@@ -48,6 +49,7 @@ class TournamentViewModel @Inject constructor(
             try {
                 val t = repo.loadTournamentState(tid)
                 val meta = repo.getTournamentMeta(tid)
+                val unlocked = repo.listUnlockedRounds(tid)
                 if (t != null) {
                     val latest = t.rounds.maxByOrNull { it.index }
                     val canGen = latest?.let { roundComplete(it, t) } ?: true
@@ -57,6 +59,7 @@ class TournamentViewModel @Inject constructor(
                         rounds = t.rounds.map { RoundUi(it) },
                         name = meta?.name ?: tid,
                         canGenerateNextRound = canGen,
+                        unlockedRounds = unlocked,
                     )
                 }
             } catch (e: Exception) {
@@ -85,7 +88,9 @@ class TournamentViewModel @Inject constructor(
 
     fun updateMatchResult(roundIndex: Int, matchId: String, homeWins: Int, awayWins: Int, draws: Int) {
         val st = _ui.value.state ?: return
-        if (_ui.value.isLocked) return
+        val latestIndex = st.rounds.maxByOrNull { it.index }?.index
+        val editable = (roundIndex == latestIndex) || _ui.value.unlockedRounds.contains(roundIndex)
+        if (!editable) return
         val round = st.rounds.firstOrNull { it.index == roundIndex } ?: return
         val updated = round.copy(matches = round.matches.map { m ->
             if (m.id.value == matchId) m.copy(result = MatchResult(homeWins, awayWins, draws)) else m
@@ -93,6 +98,14 @@ class TournamentViewModel @Inject constructor(
         viewModelScope.launch {
             repo.saveRound(tid, updated)
             refresh()
+        }
+    }
+
+    fun unlockRound(roundIndex: Int, onDone: () -> Unit) {
+        viewModelScope.launch {
+            repo.unlockRound(tid, roundIndex)
+            refresh()
+            onDone()
         }
     }
 }

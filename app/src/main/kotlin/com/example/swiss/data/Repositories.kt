@@ -103,4 +103,12 @@ class TournamentRepository(
     suspend fun getTournamentMeta(tid: String): TournamentEntity? = withContext(Dispatchers.IO) {
         db.tournaments().get(tid)
     }
+
+    suspend fun listUnlockedRounds(tid: String): Set<Int> = withContext(Dispatchers.IO) {
+        db.unlocks().listUnlockedRounds(tid).toSet()
+    }
+
+    suspend fun unlockRound(tid: String, roundIndex: Int) = withContext(Dispatchers.IO) {
+        db.unlocks().insert(UnlockEventEntity(tournamentId = tid, roundIndex = roundIndex, timestamp = System.currentTimeMillis()))
+    }
 }

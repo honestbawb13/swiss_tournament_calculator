@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.swiss.app-mergeDebugResources-67:/values-v25/values-v25.xml",
+            "outputFile": "com.example.swiss.app-mergeDebugResources-68:/values-v25/values-v25.xml",
             "map": [
                 {
                     "source": "C:\\Users\\dsnow\\.gradle\\caches\\8.10\\transforms\\c1db09ea212971de18cc4dcf64c1e8b9\\transformed\\appcompat-1.6.1\\res\\values-v25\\values-v25.xml",
