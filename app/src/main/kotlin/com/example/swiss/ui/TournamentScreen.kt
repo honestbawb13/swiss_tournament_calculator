@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -35,7 +36,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.engine.SwissEngine
 import com.example.swiss.export.CsvExporter
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun TournamentScreen(id: String, onManualPair: () -> Unit, vm: TournamentViewModel = hiltViewModel()) {
     val ui by vm.ui.collectAsState()
@@ -353,4 +354,3 @@ private fun roundCompleteUi(round: com.example.engine.model.Round, state: com.ex
         }
     }
 }
-
