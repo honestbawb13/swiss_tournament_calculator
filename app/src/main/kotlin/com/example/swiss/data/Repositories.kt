@@ -95,6 +95,11 @@ class TournamentRepository(
         db.matches().upsertAll(ms)
     }
 
+    suspend fun replaceRound(tid: String, round: Round) = withContext(Dispatchers.IO) {
+        db.matches().deleteByRound(tid, round.index)
+        saveRound(tid, round)
+    }
+
     suspend fun setLocked(tid: String, locked: Boolean) = withContext(Dispatchers.IO) {
         val t = db.tournaments().get(tid) ?: return@withContext
         db.tournaments().upsert(t.copy(locked = locked))

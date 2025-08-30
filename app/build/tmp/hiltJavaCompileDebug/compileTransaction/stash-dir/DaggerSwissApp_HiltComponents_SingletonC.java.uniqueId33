@@ -398,25 +398,25 @@ public final class DaggerSwissApp_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_example_swiss_ui_NewTournamentViewModel = "com.example.swiss.ui.NewTournamentViewModel";
-
-      static String com_example_swiss_ui_HistoryViewModel = "com.example.swiss.ui.HistoryViewModel";
+      static String com_example_swiss_ui_TournamentViewModel = "com.example.swiss.ui.TournamentViewModel";
 
       static String com_example_swiss_ui_ManualPairingViewModel = "com.example.swiss.ui.ManualPairingViewModel";
 
-      static String com_example_swiss_ui_TournamentViewModel = "com.example.swiss.ui.TournamentViewModel";
+      static String com_example_swiss_ui_HistoryViewModel = "com.example.swiss.ui.HistoryViewModel";
+
+      static String com_example_swiss_ui_NewTournamentViewModel = "com.example.swiss.ui.NewTournamentViewModel";
 
       @KeepFieldType
-      NewTournamentViewModel com_example_swiss_ui_NewTournamentViewModel2;
-
-      @KeepFieldType
-      HistoryViewModel com_example_swiss_ui_HistoryViewModel2;
+      TournamentViewModel com_example_swiss_ui_TournamentViewModel2;
 
       @KeepFieldType
       ManualPairingViewModel com_example_swiss_ui_ManualPairingViewModel2;
 
       @KeepFieldType
-      TournamentViewModel com_example_swiss_ui_TournamentViewModel2;
+      HistoryViewModel com_example_swiss_ui_HistoryViewModel2;
+
+      @KeepFieldType
+      NewTournamentViewModel com_example_swiss_ui_NewTournamentViewModel2;
     }
   }
 
@@ -468,25 +468,25 @@ public final class DaggerSwissApp_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_example_swiss_ui_ManualPairingViewModel = "com.example.swiss.ui.ManualPairingViewModel";
-
-      static String com_example_swiss_ui_HistoryViewModel = "com.example.swiss.ui.HistoryViewModel";
-
       static String com_example_swiss_ui_NewTournamentViewModel = "com.example.swiss.ui.NewTournamentViewModel";
 
       static String com_example_swiss_ui_TournamentViewModel = "com.example.swiss.ui.TournamentViewModel";
 
-      @KeepFieldType
-      ManualPairingViewModel com_example_swiss_ui_ManualPairingViewModel2;
+      static String com_example_swiss_ui_HistoryViewModel = "com.example.swiss.ui.HistoryViewModel";
 
-      @KeepFieldType
-      HistoryViewModel com_example_swiss_ui_HistoryViewModel2;
+      static String com_example_swiss_ui_ManualPairingViewModel = "com.example.swiss.ui.ManualPairingViewModel";
 
       @KeepFieldType
       NewTournamentViewModel com_example_swiss_ui_NewTournamentViewModel2;
 
       @KeepFieldType
       TournamentViewModel com_example_swiss_ui_TournamentViewModel2;
+
+      @KeepFieldType
+      HistoryViewModel com_example_swiss_ui_HistoryViewModel2;
+
+      @KeepFieldType
+      ManualPairingViewModel com_example_swiss_ui_ManualPairingViewModel2;
     }
 
     private static final class SwitchingProvider<T> implements Provider<T> {

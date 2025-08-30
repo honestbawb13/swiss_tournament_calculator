@@ -106,7 +106,7 @@ fun TournamentScreen(id: String, onManualPair: () -> Unit, vm: TournamentViewMod
                             Text("Round ${ridx + 1}: $completedMatches/$totalMatches matches saved")
                             Spacer(Modifier.weight(1f))
                             AnimatedContent(targetState = complete, transitionSpec = { fadeIn() with fadeOut() }, label = "completeChip") { isComplete ->
-                                AssistChip(onClick = {}, enabled = false, label = { Text(if (isComplete) "Completed" else "Incomplete") })
+                                AssistChip(onClick = {}, enabled = false, label = { Text(if (isComplete) "Done" else "Open", maxLines = 1) })
                             }
                             if (!isLatest) {
                                 val unlocked = ui.unlockedRounds.contains(ridx)
@@ -114,7 +114,7 @@ fun TournamentScreen(id: String, onManualPair: () -> Unit, vm: TournamentViewMod
                                 if (!unlocked) {
                                     OutlinedButton(onClick = { showConfirm = true }) { Text("Unlock") }
                                 } else {
-                                    AssistChip(onClick = {}, enabled = false, label = { Text("Unlocked") })
+                                    AssistChip(onClick = {}, enabled = false, label = { Text("Unlocked", maxLines = 1) })
                                 }
                                 if (showConfirm) {
                                     AlertDialog(
@@ -182,7 +182,13 @@ private fun MatchEditor(
         }
         com.example.engine.model.BestOf.BO3 -> {
             val total = h + a + d
-            total in 2..3 && (allowDraws || d == 0)
+            if (d == 0) {
+                // Must have a decisive winner with exactly 2 wins, prevents 1-1-0
+                (h == 2 && a in 0..1) || (a == 2 && h in 0..1)
+            } else {
+                // Draws allowed: total 2..3, no side can exceed 2 wins
+                (allowDraws && total in 2..3 && (h in 0..2) && (a in 0..2))
+            }
         }
     }
     ElevatedCard(shape = RoundedCornerShape(12.dp)) {

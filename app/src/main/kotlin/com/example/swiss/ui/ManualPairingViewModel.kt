@@ -85,12 +85,15 @@ class ManualPairingViewModel @Inject constructor(
 
     fun save(onSaved: () -> Unit) {
         val st = _ui.value.state ?: return
-        val nextIndex = st.rounds.size
+        val latestIndex = st.rounds.maxByOrNull { it.index }?.index ?: 0
+        val latest = st.rounds.firstOrNull { it.index == latestIndex }
+        val latestEditable = latest == null || latest.matches.none { it.result != null && it.home != null && it.away != null }
+        val targetIndex = if (latestEditable) latestIndex else st.rounds.size
         val matches = mutableListOf<Match>()
         _ui.value.pairs.forEachIndexed { i, (a, b) ->
             matches += Match(
-                id = MatchId("r${nextIndex + 1}_m${i}_${UUID.randomUUID().toString().take(8)}"),
-                roundIndex = nextIndex,
+                id = MatchId("r${targetIndex + 1}_m${i}_${UUID.randomUUID().toString().take(8)}"),
+                roundIndex = targetIndex,
                 home = a.id,
                 away = b.id,
                 result = null,
@@ -98,15 +101,16 @@ class ManualPairingViewModel @Inject constructor(
         }
         _ui.value.bye?.let { byePlayer ->
             matches += Match(
-                id = MatchId("r${nextIndex + 1}_bye"),
-                roundIndex = nextIndex,
+                id = MatchId("r${targetIndex + 1}_bye"),
+                roundIndex = targetIndex,
                 home = byePlayer.id,
                 away = null,
                 result = MatchResult(1, 0, 0), // award bye win
             )
         }
         viewModelScope.launch {
-            repo.saveRound(tid, Round(index = nextIndex, matches = matches))
+            val round = Round(index = targetIndex, matches = matches)
+            if (latestEditable) repo.replaceRound(tid, round) else repo.saveRound(tid, round)
             onSaved()
         }
     }
