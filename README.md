@@ -1,4 +1,8 @@
-Swiss Tournament Calculator (Android)
+Swiss Tournament Calculator (Android) — Beta
+
+Note
+- This is the public beta release. Expect some rough edges while we stabilize features and polish the UI. Please report issues and feedback via GitHub Issues.
+
 
 Overview
 - Native Kotlin + Jetpack Compose app with a pure-Kotlin engine.
@@ -45,4 +49,3 @@ Next Steps
 - Wire Room repositories into ViewModels and UI.
 - Add screens for player entry, round management, manual pairing overrides, and export via Storage Access Framework.
 - Add import for CSV to recreate or clone tournaments.
-
